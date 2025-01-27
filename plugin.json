@@ -1,0 +1,69 @@
+{
+  "slug": "HoyerHoppes",
+  "name": "HoyerHoppes",
+  "version": "2.0.0",
+  "license": "CC0-1.0",
+  "brand": "HoyerHoppes",
+  "author": "Jake McCulley",
+  "authorEmail": "",
+  "authorUrl": "",
+  "pluginUrl": "",
+  "manualUrl": "",
+  "sourceUrl": "",
+  "donateUrl": "",
+  "changelogUrl": "",
+  "modules": [
+    {
+      "slug": "first_module",
+      "name": "first_module",
+      "description": "just testing",
+      "tags": [
+        "oscillator"
+      ]
+    },
+    {
+      "slug": "transposing_oscillator",
+      "name": "Transposing Oscillator",
+      "description": "manipulate AR duration to organically transpose melodies",
+      "tags": [
+        "oscillator"
+      ]
+    },
+    {
+      "slug": "nonlinear_melody_transformer",
+      "name": "Nonlinear Melody Transformer",
+      "description": "applies various transformations to an input based on minimum and maximum note",
+      "tags": [
+        "Utility",
+        "Dynamics"
+      ]
+    },
+    {
+      "slug": "scanning_clock_multiplier",
+      "name": "Scanning Clock Multiplier",
+      "description": "Activated clock ratios get added to scannable list of outputs",
+      "tags": [
+        "clock"
+      ]
+    },
+    {
+      "slug": "scanning_clock_multiplier_v2",
+      "name": "scanning_clock_multiplier_v2",
+      "description": "create a scannable list of clock ratios",
+      "tags": [
+        "Clock generator",
+        "Clock modulator",
+        "Envelope generator"
+      ]
+    },
+    {
+      "slug": "scanning_frequency_division_oscillator",
+      "name": "scanning_frequency_division_oscillator",
+      "description": "obtain organic transpositions and multiple harmonically-related frequencies from a single v/oct",
+      "tags": [
+        "oscillator",
+        "polyphonic"
+      ]
+    }
+  ]
+}
