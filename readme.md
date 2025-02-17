@@ -1,9 +1,13 @@
 Modules for VCVRack v2.0 or higher.
 
 Included modules:
+
 Scanning Clock Multiplier v2
+
 Scanning Frequency Division Oscillator
+
 Phase-Driven Multihit Envelope
+
 Melody Transformer
 
 
