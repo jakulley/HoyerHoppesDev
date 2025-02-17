@@ -63,7 +63,7 @@ hits:
 
 this controls how many times the envelope triggers per phase cycle. By default it ranges from 1-16, but there are several other options selectable from the context menu, which may be useful in different rhythmic contexts, particularly when CV is applied. It works by dividing the y-value of the phase into equal portions; as the phase rises through those portions, an envelope is output.
 
-![{7A3EC671-30C3-400A-9E79-50A0B2AEA486}](https://github.com/user-attachments/assets/4a7adcd0-a615-464e-8549-b88119ae48f9)
+![{A72A9254-6F29-4841-98E9-1AADA895D991}](https://github.com/user-attachments/assets/d2d2619e-0630-486d-b0b4-ce411460ed5e)
 
 context menu providing several options for hit scaling
 
