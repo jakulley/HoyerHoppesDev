@@ -101,9 +101,6 @@ struct Melody_transformer : Module {
 		configOutput(PRIO_2_OUTPUT, "e.g. the root, 3rd, and 5th of the scale");
 		configOutput(PRIO_3_OUTPUT, "e.g. the root and 5th of the scale");
 		configOutput(PRIO_4_OUTPUT, "e.g. the root of the scale");
-		// configLight(S_AND_H_LIGHT, "");
-		// configLight(LOOP_LIGHT, "");
-		// configLight(OVERWRITE_LIGHT, "");
 	}
 
 	struct Note {
@@ -128,7 +125,7 @@ struct Melody_transformer : Module {
 	float prio4Out = 0.f;
 
 	dsp::SchmittTrigger sampleTrig[16];
-	dsp::SchmittTrigger loopTrig;
+	dsp::SchmittTrigger loopTrig[16];
 	dsp::SchmittTrigger overwriteTrig[16];
 	float shiftReg[16][16] = {};
 	int shift = 0;
@@ -136,9 +133,9 @@ struct Melody_transformer : Module {
 
 	float input[16] = {};
 	float gain = 0.f;
-	float gainIn[16] = {};
+	float gainRaw[16] = {};
 	float offset = 0.f;
-	float offsetIn[16] = {};
+	float offsetRaw[16] = {};
 	float sampledInput[16] = {};
 	float processedInput[16] = {};
 	float raw[16] = {};
@@ -269,25 +266,22 @@ struct Melody_transformer : Module {
 		//set channels based on input
 		int channels = std::max(1, getInput(INPUT_INPUT).getChannels());
 
-		//process block
+		
 		for (int c = 0; c < channels; c++) {
 			input[c] = getInput(INPUT_INPUT).isConnected()? getInput(INPUT_INPUT).getPolyVoltage(c) : std::rand() / float(RAND_MAX) * 20. - 10.;
-			gain = (getInput(GAIN_INPUT).isConnected()? getInput(GAIN_INPUT).getVoltage() / 10 * getParam(GAIN_PARAM).getValue() : getParam(GAIN_PARAM).getValue());
-			gainIn[c] = input[c] * gain;
-			offset = (getInput(OFFSET_INPUT).isConnected()? getInput(OFFSET_INPUT).getVoltage() : getParam(OFFSET_PARAM).getValue()); 
-			offsetIn[c] = gainIn[c] + offset;
+			
 			dsp::SchmittTrigger::Event shTrig = sampleTrig[c].processEvent(getInput(S_AND_H_INPUT).getPolyVoltage(c));
 			if (shTrig == 1) {
-				sampledInput[c] = offsetIn[c];
+				sampledInput[c] = input[c];
 			}
 			bool sAndHOn = getParam(S_AND_H_PARAM).getValue() == 1.;
-			processedInput[c] = sAndHOn? sampledInput[c] : offsetIn[c];
+			processedInput[c] = sAndHOn? sampledInput[c] : input[c];
 
 			//loop block
 			bool loopClock = getInput(CLOCK_INPUT).isConnected();
 			bool loopOn = getParam(LOOP_ON_PARAM).getValue() == 1.;
 			shift = clamp(shift, 0, 15);
-			dsp::SchmittTrigger::Event lTrig = loopTrig.processEvent(loopClock ? getInput(CLOCK_INPUT).getPolyVoltage(c) : getInput(S_AND_H_INPUT).getPolyVoltage(c));
+			dsp::SchmittTrigger::Event lTrig = loopTrig[c].processEvent(loopClock ? getInput(CLOCK_INPUT).getPolyVoltage(c) : getInput(S_AND_H_INPUT).getPolyVoltage(c));
 			float overwrite = (getInput(OVERWRITE_INPUT).isConnected()? getInput(OVERWRITE_INPUT).getPolyVoltage(c) : getParam(OVERWRITE_PARAM).getValue());
 			if (lTrig == 1) {
 				if (!loopOn || overwrite >= 1.) {
@@ -302,6 +296,10 @@ struct Melody_transformer : Module {
 				shift = 0;
 			}
 			raw[c] = loopOn? shiftOut[c] : processedInput[c];
+			gain = (getInput(GAIN_INPUT).isConnected()? getInput(GAIN_INPUT).getVoltage() / 10 * getParam(GAIN_PARAM).getValue() : getParam(GAIN_PARAM).getValue());
+			gainRaw[c] = raw[c] * gain;
+			offset = (getInput(OFFSET_INPUT).isConnected()? getInput(OFFSET_INPUT).getVoltage() : getParam(OFFSET_PARAM).getValue()); 
+			offsetRaw[c] = gainRaw[c] + offset;
 
 			//floor and ceiling blocks
 			floor = getInput(FLOOR_LEVEL_INPUT).isConnected() ? getInput(FLOOR_LEVEL_INPUT).getVoltage() : getParam(FLOOR_LEVEL_PARAM).getValue();
@@ -312,41 +310,41 @@ struct Melody_transformer : Module {
 			ceiling *= gain;
 			ceiling += offset;
 			ceilingMode = getInput(CEILING_MODE_INPUT).isConnected() ? clamp(int(getInput(CEILING_MODE_INPUT).getVoltage()), 0, 5) : int(getParam(CEILING_MODE_PARAM).getValue());
-			if (raw[c] < floor) {
+			if (offsetRaw[c] < floor) {
 				switch (floorMode) {
 					case 0 :
-						raw[c] = ceiling;
+					offsetRaw[c] = ceiling;
 						break;
 					case 1 :
-						while (raw[c] < floor) {
-							raw[c]++;
+						while (offsetRaw[c] < floor) {
+							offsetRaw[c]++;
 						}
 						break;
 					case 2 :
-						raw[c] += 2*(floor - raw[c]);
+						offsetRaw[c] += 2*(floor - offsetRaw[c]);
 						break;
 					case 3 :
-						raw[c] = floor;
+						offsetRaw[c] = floor;
 						break;
 					case 4 :
 						break;
 				}
 			}
-			if (raw[c] > ceiling) {
+			if (offsetRaw[c] > ceiling) {
 				switch (ceilingMode) {
 					case 0 :
-						raw[c] = floor;
+						offsetRaw[c] = floor;
 						break;
 					case 1 :
-						while (raw[c] > ceiling) {
-							raw[c]--;
+						while (offsetRaw[c] > ceiling) {
+							offsetRaw[c]--;
 						}
 						break;
 					case 2 :
-						raw[c] -= 2*(raw[c] - ceiling);
+						offsetRaw[c] -= 2*(offsetRaw[c] - ceiling);
 						break;
 					case 3 :
-						raw[c] = ceiling;
+						offsetRaw[c] = ceiling;
 						break;
 					case 4 :
 						break;
@@ -354,17 +352,17 @@ struct Melody_transformer : Module {
 			}
 
 			//quantize block
-			prio1Out = getQuantizedValue(raw[c], prio1s);
-			prio2Out = getQuantizedValue(raw[c], prio2s);
-			prio3Out = getQuantizedValue(raw[c], prio3s);
-			prio4Out = getQuantizedValue(raw[c], prio4s);
+			prio1Out = getQuantizedValue(offsetRaw[c], prio1s);
+			prio2Out = getQuantizedValue(offsetRaw[c], prio2s);
+			prio3Out = getQuantizedValue(offsetRaw[c], prio3s);
+			prio4Out = getQuantizedValue(offsetRaw[c], prio4s);
 
 
 			getOutput(PRIO_1_OUTPUT).setVoltage(prio1Out, c);
 			getOutput(PRIO_2_OUTPUT).setVoltage(prio2Out, c);
 			getOutput(PRIO_3_OUTPUT).setVoltage(prio3Out, c);
 			getOutput(PRIO_4_OUTPUT).setVoltage(prio4Out, c);
-			getOutput(RAW_OUTPUT).setVoltage(raw[c], c);
+			getOutput(RAW_OUTPUT).setVoltage(offsetRaw[c], c);
 		}
 		getOutput(PRIO_1_OUTPUT).setChannels(channels);
 		getOutput(PRIO_2_OUTPUT).setChannels(channels);
