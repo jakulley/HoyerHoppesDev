@@ -36,6 +36,11 @@ attack:
 
 behaves similarly to attack on a normal envelope, except that it's calculated as a percentage of the phase divided by the number of hits, rather than as a length of time. The exponential knob to the left of the slider works as expected, although its effects are not rendered on the graphics widget. To visualize the effect it's having on the envelope, send the envelope output to an oscilloscope.
 
+![{28A2E803-5051-4EE2-B026-8A596657F16D}](https://github.com/user-attachments/assets/7a3dab78-de2b-430d-a8ed-d57de5c3300a)
+
+the exponential knobs on attack and decay are not reflected in the graphics widget, but they work as expected
+
+
 sustain: 
 
 the sustain level is always 100% (relative to phase->env--see below); unlike most envelope modules, this slider determines the DURATION of the envelope, again calculated as a percentage of the phase divided by the number of hits.
