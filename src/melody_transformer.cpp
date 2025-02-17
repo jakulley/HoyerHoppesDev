@@ -127,21 +127,21 @@ struct Melody_transformer : Module {
 	float prio3Out = 0.f;
 	float prio4Out = 0.f;
 
-	dsp::SchmittTrigger sampleTrig;
+	dsp::SchmittTrigger sampleTrig[16];
 	dsp::SchmittTrigger loopTrig;
-	dsp::SchmittTrigger overwriteTrig;
-	float shiftReg[16] = {};
+	dsp::SchmittTrigger overwriteTrig[16];
+	float shiftReg[16][16] = {};
 	int shift = 0;
-	float shiftOut = 0.f;
+	float shiftOut[16] = {};
 
-	float input = 0.f;
+	float input[16] = {};
 	float gain = 0.f;
-	float gainIn = 0.f;
+	float gainIn[16] = {};
 	float offset = 0.f;
-	float offsetIn = 0.f;
-	float sampledInput = 0.f;
-	float processedInput = 0.f;
-	float raw = 0.f;
+	float offsetIn[16] = {};
+	float sampledInput[16] = {};
+	float processedInput[16] = {};
+	float raw[16] = {};
 	float floor = 0.f;
 	int floorMode = 0;
 	float ceiling = 0.f;
@@ -266,131 +266,151 @@ struct Melody_transformer : Module {
 		prioShift = int(getInput(PRIO_SHIFT_INPUT).isConnected()? getInput(PRIO_SHIFT_INPUT).getVoltage()/10.*12. : getParam(PRIO_SHIFT_PARAM).getValue());
 		updateNotes(transpose, prioShift);
 
+		//set channels based on input
+		int channels = std::max(1, getInput(INPUT_INPUT).getChannels());
+
 		//process block
-		input = getInput(INPUT_INPUT).isConnected()? getInput(INPUT_INPUT).getVoltage() : std::rand() / float(RAND_MAX) * 20. - 10.;
-		gain = (getInput(GAIN_INPUT).isConnected()? getInput(GAIN_INPUT).getVoltage() / 10 * getParam(GAIN_PARAM).getValue() : getParam(GAIN_PARAM).getValue());
-		gainIn = input * gain;
-		offset = (getInput(OFFSET_INPUT).isConnected()? getInput(OFFSET_INPUT).getVoltage() : getParam(OFFSET_PARAM).getValue()); 
-		offsetIn = gainIn + offset;
-		dsp::SchmittTrigger::Event shTrig = sampleTrig.processEvent(getInput(S_AND_H_INPUT).getVoltage());
-		if (shTrig == 1) {
-			sampledInput = offsetIn;
-		}
-		bool sAndHOn = getParam(S_AND_H_PARAM).getValue() == 1.;
-		processedInput = sAndHOn? sampledInput : offsetIn;
-
-		//loop block
-		bool loopClock = getInput(CLOCK_INPUT).isConnected();
-		bool loopOn = getParam(LOOP_ON_PARAM).getValue() == 1.;
-		shift = clamp(shift, 0, 15);
-		dsp::SchmittTrigger::Event lTrig = loopTrig.processEvent(loopClock ? getInput(CLOCK_INPUT).getVoltage() : getInput(S_AND_H_INPUT).getVoltage());
-		float overwrite = (getInput(OVERWRITE_INPUT).isConnected()? getInput(OVERWRITE_INPUT).getVoltage() : getParam(OVERWRITE_PARAM).getValue());
-		if (lTrig == 1) {
-			if (!loopOn || overwrite >= 1.) {
-				shiftReg[shift] = processedInput;
-			} else {
-				shiftOut = shiftReg[shift];
+		for (int c = 0; c < channels; c++) {
+			input[c] = getInput(INPUT_INPUT).isConnected()? getInput(INPUT_INPUT).getPolyVoltage(c) : std::rand() / float(RAND_MAX) * 20. - 10.;
+			gain = (getInput(GAIN_INPUT).isConnected()? getInput(GAIN_INPUT).getVoltage() / 10 * getParam(GAIN_PARAM).getValue() : getParam(GAIN_PARAM).getValue());
+			gainIn[c] = input[c] * gain;
+			offset = (getInput(OFFSET_INPUT).isConnected()? getInput(OFFSET_INPUT).getVoltage() : getParam(OFFSET_PARAM).getValue()); 
+			offsetIn[c] = gainIn[c] + offset;
+			dsp::SchmittTrigger::Event shTrig = sampleTrig[c].processEvent(getInput(S_AND_H_INPUT).getPolyVoltage(c));
+			if (shTrig == 1) {
+				sampledInput[c] = offsetIn[c];
 			}
-			shift++;  // Shift increments only once per clock event
-		}
-		int loopLength = std::floor(getParam(LOOP_LENGTH_PARAM).getValue() + 0.5);
-		if (shift >= loopLength) {
-			shift = 0;
-		}
-		raw = loopOn? shiftOut : processedInput;
+			bool sAndHOn = getParam(S_AND_H_PARAM).getValue() == 1.;
+			processedInput[c] = sAndHOn? sampledInput[c] : offsetIn[c];
 
-		//floor and ceiling blocks
-		floor = getInput(FLOOR_LEVEL_INPUT).isConnected() ? getInput(FLOOR_LEVEL_INPUT).getVoltage() : getParam(FLOOR_LEVEL_PARAM).getValue();
-		floor *= gain;
-		floor += offset;
-		floorMode = getInput(FLOOR_MODE_INPUT).isConnected() ? clamp(int(getInput(FLOOR_MODE_INPUT).getVoltage()), 0, 5) : int(getParam(FLOOR_MODE_PARAM).getValue());
-		ceiling = getInput(CEILING_LEVEL_INPUT).isConnected() ? getInput(CEILING_LEVEL_INPUT).getVoltage() : getParam(CEILING_LEVEL_PARAM).getValue();
-		ceiling *= gain;
-		ceiling += offset;
-		ceilingMode = getInput(CEILING_MODE_INPUT).isConnected() ? clamp(int(getInput(CEILING_MODE_INPUT).getVoltage()), 0, 5) : int(getParam(CEILING_MODE_PARAM).getValue());
-		if (raw < floor) {
-			switch (floorMode) {
-				case 0 :
-					raw = ceiling;
-					break;
-				case 1 :
-					while (raw < floor) {
-						raw++;
-					}
-					break;
-				case 2 :
-					raw += 2*(floor - raw);
-					break;
-				case 3 :
-					raw = floor;
-					break;
-				case 4 :
-					break;
+			//loop block
+			bool loopClock = getInput(CLOCK_INPUT).isConnected();
+			bool loopOn = getParam(LOOP_ON_PARAM).getValue() == 1.;
+			shift = clamp(shift, 0, 15);
+			dsp::SchmittTrigger::Event lTrig = loopTrig.processEvent(loopClock ? getInput(CLOCK_INPUT).getPolyVoltage(c) : getInput(S_AND_H_INPUT).getPolyVoltage(c));
+			float overwrite = (getInput(OVERWRITE_INPUT).isConnected()? getInput(OVERWRITE_INPUT).getPolyVoltage(c) : getParam(OVERWRITE_PARAM).getValue());
+			if (lTrig == 1) {
+				if (!loopOn || overwrite >= 1.) {
+					shiftReg[shift][c] = processedInput[c];
+				} else {
+					shiftOut[c] = shiftReg[shift][c];
+				}
+				shift++;  // Shift increments only once per clock event
 			}
-		}
-		if (raw > ceiling) {
-			switch (ceilingMode) {
-				case 0 :
-					raw = floor;
-					break;
-				case 1 :
-					while (raw > ceiling) {
-						raw--;
-					}
-					break;
-				case 2 :
-					raw -= 2*(raw - ceiling);
-					break;
-				case 3 :
-					raw = ceiling;
-					break;
-				case 4 :
-					break;
+			int loopLength = std::floor(getParam(LOOP_LENGTH_PARAM).getValue() + 0.5);
+			if (shift >= loopLength) {
+				shift = 0;
 			}
+			raw[c] = loopOn? shiftOut[c] : processedInput[c];
+
+			//floor and ceiling blocks
+			floor = getInput(FLOOR_LEVEL_INPUT).isConnected() ? getInput(FLOOR_LEVEL_INPUT).getVoltage() : getParam(FLOOR_LEVEL_PARAM).getValue();
+			floor *= gain;
+			floor += offset;
+			floorMode = getInput(FLOOR_MODE_INPUT).isConnected() ? clamp(int(getInput(FLOOR_MODE_INPUT).getVoltage()), 0, 5) : int(getParam(FLOOR_MODE_PARAM).getValue());
+			ceiling = getInput(CEILING_LEVEL_INPUT).isConnected() ? getInput(CEILING_LEVEL_INPUT).getVoltage() : getParam(CEILING_LEVEL_PARAM).getValue();
+			ceiling *= gain;
+			ceiling += offset;
+			ceilingMode = getInput(CEILING_MODE_INPUT).isConnected() ? clamp(int(getInput(CEILING_MODE_INPUT).getVoltage()), 0, 5) : int(getParam(CEILING_MODE_PARAM).getValue());
+			if (raw[c] < floor) {
+				switch (floorMode) {
+					case 0 :
+						raw[c] = ceiling;
+						break;
+					case 1 :
+						while (raw[c] < floor) {
+							raw[c]++;
+						}
+						break;
+					case 2 :
+						raw[c] += 2*(floor - raw[c]);
+						break;
+					case 3 :
+						raw[c] = floor;
+						break;
+					case 4 :
+						break;
+				}
+			}
+			if (raw[c] > ceiling) {
+				switch (ceilingMode) {
+					case 0 :
+						raw[c] = floor;
+						break;
+					case 1 :
+						while (raw[c] > ceiling) {
+							raw[c]--;
+						}
+						break;
+					case 2 :
+						raw[c] -= 2*(raw[c] - ceiling);
+						break;
+					case 3 :
+						raw[c] = ceiling;
+						break;
+					case 4 :
+						break;
+				}
+			}
+
+			//quantize block
+			prio1Out = getQuantizedValue(raw[c], prio1s);
+			prio2Out = getQuantizedValue(raw[c], prio2s);
+			prio3Out = getQuantizedValue(raw[c], prio3s);
+			prio4Out = getQuantizedValue(raw[c], prio4s);
+
+
+			getOutput(PRIO_1_OUTPUT).setVoltage(prio1Out, c);
+			getOutput(PRIO_2_OUTPUT).setVoltage(prio2Out, c);
+			getOutput(PRIO_3_OUTPUT).setVoltage(prio3Out, c);
+			getOutput(PRIO_4_OUTPUT).setVoltage(prio4Out, c);
+			getOutput(RAW_OUTPUT).setVoltage(raw[c], c);
 		}
-
-		//quantize block
-		prio1Out = getQuantizedValue(raw, prio1s);
-		prio2Out = getQuantizedValue(raw, prio2s);
-		prio3Out = getQuantizedValue(raw, prio3s);
-		prio4Out = getQuantizedValue(raw, prio4s);
-
-
-		getOutput(PRIO_1_OUTPUT).setVoltage(prio1Out);
-		getOutput(PRIO_2_OUTPUT).setVoltage(prio2Out);
-		getOutput(PRIO_3_OUTPUT).setVoltage(prio3Out);
-		getOutput(PRIO_4_OUTPUT).setVoltage(prio4Out);
-		getOutput(RAW_OUTPUT).setVoltage(raw);
+		getOutput(PRIO_1_OUTPUT).setChannels(channels);
+		getOutput(PRIO_2_OUTPUT).setChannels(channels);
+		getOutput(PRIO_3_OUTPUT).setChannels(channels);
+		getOutput(PRIO_4_OUTPUT).setChannels(channels);
+		getOutput(RAW_OUTPUT).setChannels(channels);
 	}
 
 	json_t* dataToJson() override {
-        json_t* rootJ = json_object();
-
-        // Save the activeRatios vector to JSON
-        json_t* shiftRegJ = json_array();
-        for (float note : shiftReg) {
-            json_array_append_new(shiftRegJ, json_real(note));
-        }
-        json_object_set_new(rootJ, "shiftReg", shiftRegJ);
-
-        return rootJ;
-
-    }
-    void dataFromJson(json_t* rootJ) override {
+		json_t* rootJ = json_object();
+	
+		// Save shiftReg as a nested JSON array
+		json_t* shiftRegJ = json_array();
+		for (int i = 0; i < 16; i++) {
+			json_t* rowJ = json_array();
+			for (int j = 0; j < 16; j++) {
+				json_array_append_new(rowJ, json_real(shiftReg[i][j]));
+			}
+			json_array_append_new(shiftRegJ, rowJ);
+		}
+		json_object_set_new(rootJ, "shiftReg", shiftRegJ);
+	
+		return rootJ;
+	}
+	
+	void dataFromJson(json_t* rootJ) override {
 		json_t* shiftRegJ = json_object_get(rootJ, "shiftReg");
 		if (shiftRegJ && json_is_array(shiftRegJ)) {
-			size_t index;
-			json_t* value;
-			size_t count = json_array_size(shiftRegJ);
+			size_t rowCount = json_array_size(shiftRegJ);
 			
-			for (index = 0; index < count && index < 16; index++) { // Ensure we don't exceed the array size
-				value = json_array_get(shiftRegJ, index);
-				if (json_is_number(value)) {
-					shiftReg[index] = (float)json_real_value(value);
+			for (size_t i = 0; i < rowCount && i < 16; i++) { // Limit to 16 rows
+				json_t* rowJ = json_array_get(shiftRegJ, i);
+				if (rowJ && json_is_array(rowJ)) {
+					size_t colCount = json_array_size(rowJ);
+					
+					for (size_t j = 0; j < colCount && j < 16; j++) { // Limit to 16 columns
+						json_t* value = json_array_get(rowJ, j);
+						if (json_is_number(value)) {
+							shiftReg[i][j] = (float)json_real_value(value);
+						}
+					}
 				}
 			}
 		}
 	}
+	
 	
 };
 
