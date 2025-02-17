@@ -20,9 +20,12 @@ The Phase-Driven Multihit Envelope takes either a 0-10v phase signal (basically,
 
 The graphic display: 
 
-![{64A5233C-E701-440C-AA55-52950F95F360}](https://github.com/user-attachments/assets/770e72df-0827-47b3-8c9c-8bfdcfd06091)
 
-Here we see how the calculations of the multihit envelope can quickly get interesting. The gray triangle represents the current state of the phase after applying skew and spread. The phase output will look the same through an oscilloscope. The gray vertical line, which is only active when an input is present at rate, indicates the current position of the phase. The white line depicts the current state of the envelope--here there are four hits on both sides of the skew, affected by moderate spread and phase->envelope. It isn't perfect--see below at attack and phase->envelope--but it gives a good approximation.
+https://github.com/user-attachments/assets/bbaaf9f4-9f35-4744-a5ac-41d764c279dc
+
+With a little bit of CV, things can quickly get interesting!
+
+The gray triangle (or blob, if the spread value is low) represents the current state of the phase after applying skew and spread. The phase output will look the same through an oscilloscope. The gray vertical line, which is only active when an input is present at rate, indicates the current position of the phase. The white line depicts the current state of the envelope--here there are four hits on both sides of the skew, affected by moderate spread and phase->envelope. It isn't perfect--see below at attack and phase->envelope--but it gives a good approximation.
 
 rate: 
 
