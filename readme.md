@@ -20,9 +20,7 @@ The Phase-Driven Multihit Envelope takes either a 0-10v phase signal (basically,
 
 The graphic display: 
 
-
-![image](https://github.com/user-attachments/assets/8d36df1a-9c92-439d-88f9-37f437b12c92)
-
+![ScreenRecording2025-02-17154829-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b685a6a8-d558-4a88-8736-89ee44054c6b)
 
 With a little bit of CV, things can quickly get interesting!
 
