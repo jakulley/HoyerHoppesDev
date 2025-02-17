@@ -15,8 +15,22 @@ extern Model* modelNonlinear_melody_transformer;
 extern Model* modelScanning_clock_multiplier;
 extern Model* modelScanning_clock_multiplier_v2;
 extern Model* modelScanning_frequency_division_oscillator;
+extern Model* modelPhase_driven_multihit_envelope;
+extern Model* modelScanning_frequency_division_osc_poly;
+extern Model* modelMelody_transformer;
 
 //big bunch of mostly nearly identical component structs
+
+struct Note_Button : app::SvgSwitch {
+	Note_Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/note_off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/note_prio_4.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/note_prio_3.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/note_prio_2.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/note_prio_1.svg")));
+	}
+};
 
 struct RoundExtraBigBlackKnob : RoundKnob {
 	RoundExtraBigBlackKnob() {
@@ -79,6 +93,63 @@ struct By8Button : app::SvgSwitch {
 		momentary = false;
 		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/By8off.svg")));
 		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/By8on.svg")));
+	}
+};
+
+struct x1Button : app::SvgSwitch {
+	x1Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x1Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x1On.svg")));
+	}
+};
+struct x2Button : app::SvgSwitch {
+	x2Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x2Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x2On.svg")));
+	}
+};
+struct x3Button : app::SvgSwitch {
+	x3Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x3Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x3On.svg")));
+	}
+};
+struct x4Button : app::SvgSwitch {
+	x4Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x4Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x4On.svg")));
+	}
+};
+struct x5Button : app::SvgSwitch {
+	x5Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x5Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x5On.svg")));
+	}
+};
+struct x6Button : app::SvgSwitch {
+	x6Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x6Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x6On.svg")));
+	}
+};
+struct x7Button : app::SvgSwitch {
+	x7Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x7Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x7On.svg")));
+	}
+};
+struct x8Button : app::SvgSwitch {
+	x8Button() {
+		momentary = false;
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x8Off.svg")));
+		addFrame(Svg::load(asset::plugin(pluginInstance, "res/ComponentLibrary/x8On.svg")));
 	}
 };
 

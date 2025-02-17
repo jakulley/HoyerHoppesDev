@@ -48,7 +48,7 @@
     },
     {
       "slug": "scanning_clock_multiplier_v2",
-      "name": "scanning_clock_multiplier_v2",
+      "name": "scanning clock multiplier v2",
       "description": "create a scannable list of clock ratios",
       "tags": [
         "Clock generator",
@@ -58,11 +58,37 @@
     },
     {
       "slug": "scanning_frequency_division_oscillator",
-      "name": "scanning_frequency_division_oscillator",
-      "description": "obtain organic transpositions and multiple harmonically-related frequencies from a single v/oct",
+      "name": "scanning frequency division oscillator",
+      "description": "obtain organic transpositions and multiple harmonically related frequencies from a single v/oct",
       "tags": [
-        "oscillator",
-        "polyphonic"
+        "Oscillator"
+      ]
+    },
+    {
+      "slug": "phase_driven_multihit_envelope",
+      "name": "phase-driven multihit envelope",
+      "description": "derive up to sixteen hits from a 0-10 sawtooth or steady clock pulse",
+      "tags": [
+        "Envelope generator",
+        "clock modulator"
+      ]
+    },
+    {
+      "slug": "scanning_frequency_division_osc_poly",
+      "name": "polyphonic scanning frequency division oscillator",
+      "description": "obtain organic transpositions and multiple harmonically related frequencies from a single v/oct",
+      "tags": [
+        "Oscillator",
+        "Polyphonic"
+      ]
+    },
+    {
+      "slug": "melody_transformer",
+      "name": "Melody Transformer",
+      "description": "shape messy inputs into melodic outputs with selectable note priority",
+      "tags": [
+        "Quantizer",
+        "Utility"
       ]
     }
   ]
