@@ -30,11 +30,11 @@ sustain: the sustain level is always 100%; unlike most envelope modules, this sl
 decay: like attack.
 
 phase->env: 
+reduces the amplitude of the envelope by an amount proportionate to the phase value. Easier to see than to describe:
 
 ![{44710D33-F918-40B1-BFE2-662FE0B00BD6}](https://github.com/user-attachments/assets/c9a313b8-a2a6-43e2-9dfd-d96e0afd5e74)
 
-The top scope shows the envelope output with phase->env at 100%, the bottom at 0%. You can also compare the output of the first module to the graphics widget to see understand the difference.
-Reduces the amplitude of the envelopes proportionately to their position relative to the phase, after performing skew and morph functions. On the graphics widget, this is depicted as a hard clip, but in reality it is done by multiplication. Send the envelope to an oscilloscope to see. The effect can give the envelope repetitions an organic dynamic variation.
+The top scope shows the envelope output with phase->env at 100%, the bottom at 0%. You can also compare the output of the first module to the graphics widget to see how the widget misrepresents the actual output signal.
 
 
 
@@ -46,7 +46,7 @@ skew:
 
 skew at 1., skew at .66, and skew at 0.
 
-Skew turns the phase into a triangle wave with a variable peak position along the x-axis--the effect this has on the envelope is to produce a mirror image envelope which is squeezed into the remainder of the phase window. It sounds more complicated than it is, just try moving the skew to see what I mean. An unusual consequence of the mirroring is that on the descending phase, the attack and decay values are swapped; attack becomes decay, and vice versa. To compensate for this behavior, which may not always be desirable (e.g. in percussive contexts), there is a trigger output available.
+An unusual consequence of the mirroring effect of skew is that during the descending phase, the attack and decay values are swapped; attack becomes decay, and vice versa. This can create interesting and complex effects, but it may not always be desirable, e.g. in percussive contexts. To compensate for this behavior, there is a trigger output available--you can use the module to calculate complex timings, but then send triggers to a concrete gate- or trigger-based envelope.
 
 spread: 
 
