@@ -2,20 +2,21 @@ Modules for VCVRack v2.0 or higher.
 
 Included modules:
 
-Scanning Clock Multiplier v2
+    Scanning Clock Multiplier v2
 
-Scanning Frequency Division Oscillator
+    Scanning Frequency Division Oscillator
 
-Phase-Driven Multihit Envelope
+    Phase-Driven Multihit Envelope
 
-Melody Transformer
+    Melody Transformer
+
 
 
 Phase-Driven Multihit Envelope
 
 ![{D60FBC3D-B95D-4A34-9EB5-A035D62D94B7}](https://github.com/user-attachments/assets/c59d697c-cf23-40d4-ab76-3df02630fc9e)
 
-The Phase-Driven Multihit Envelope takes either a 0-10v phase signal (basically, a sawtooth wave) or a clock signal, and outputs a series of 1-16 envelopes based on its settings. It is not an envelope generator in the traditional sense of modulating a gate from a keyboard; instead, it is tempo-driven. It might be useful to think of it as a function generator.
+The Phase-Driven Multihit Envelope takes either a 0-10v phase signal (basically, a sawtooth wave) or a clock signal, and outputs a series of 1-16 envelopes. It is not an envelope generator in the traditional sense of modulating a gate from a keyboard; instead, it is tempo-driven. It might be useful to think of it as a function generator.
 
 The graphic display: 
 
