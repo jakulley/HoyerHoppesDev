@@ -24,15 +24,20 @@ The graphic display:
 
 Here we see how the calculations of the multihit envelope can quickly get interesting. The gray triangle represents the current state of the phase after applying skew and spread. The phase output will look the same through an oscilloscope. The gray vertical line, which is only active when an input is present at rate, indicates the current position of the phase. The white line depicts the current state of the envelope--here there are four hits on both sides of the skew, affected by moderate spread and phase->envelope. It isn't perfect--see below at attack and phase->envelope--but it gives a good approximation.
 
-rate: input signal. With the rate button turned on (glowing white), the output values will be the envelope calculation times the current voltage of the input--a sawtooth wave (rising from 0-10v) will scan linearly through the envelopes; a triangle wave will scan linearly forwards, then linearly backwards; and so on. With the rate button turned off, the module will calculate the length of a phase based on the period of time between two clock triggers, and then scan linearly through that period(behaving as though the clock were a sawtooth). The primary benefit of using a phase wave rather than a clock is that the module will always be synced to the input--you can change the frequency of the input on the fly and the module adapts in real time. With a standard clock signal, it will always be one cycle behind any rate changes, as it has to recalculate the phase. It also takes two clock pulses to initialize, instead of beginning instantly. But it's fine if you expect the tempo to stay steady and find the word "phase-driven" intimidating.
+rate: 
+input signal. With the rate button turned on (glowing white), the output values will be the envelope calculation times the current voltage of the input--a sawtooth wave (rising from 0-10v) will scan linearly through the envelopes; a triangle wave will scan linearly forwards, then linearly backwards; and so on. With the rate button turned off, the module will calculate the length of a phase based on the period of time between two clock triggers, and then scan linearly through that period(behaving as though the clock were a sawtooth). The primary benefit of using a phase wave rather than a clock is that the module will always be synced to the input--you can change the frequency of the input on the fly and the module adapts in real time. With a standard clock signal, it will always be one cycle behind any rate changes, as it has to recalculate the phase. It also takes two clock pulses to initialize, instead of beginning instantly. But it's fine if you expect the tempo to stay steady and find the word "phase-driven" intimidating.
 
-vca in: the Phase-Driven Multihit Envelope has an internal VCA normalled to the envelope, so you can modulate an incoming signal (like a sound generator) without needing an external VCA. Not important in the world of VCVRack, where modules are free, but it's easy to implement, so why not include it.
+vca in: 
+the Phase-Driven Multihit Envelope has an internal VCA normalled to the envelope, so you can modulate an incoming signal (like a sound generator) without needing an external VCA. Not important in the world of VCVRack, where modules are free, but it's easy to implement, so why not include it.
 
-attack: behaves similarly to attack on a normal envelope, except that it's calculated as a percentage of the phase divided by the number of hits, rather than a length of time. The exponential knob to the left of the slider works as expected, although its effects are not rendered on the graphics widget. To visualize the effect it's having on the envelope, send the envelope output to an oscilloscope.
+attack: 
+behaves similarly to attack on a normal envelope, except that it's calculated as a percentage of the phase divided by the number of hits, rather than as a length of time. The exponential knob to the left of the slider works as expected, although its effects are not rendered on the graphics widget. To visualize the effect it's having on the envelope, send the envelope output to an oscilloscope.
 
-sustain: the sustain level is always 100%; unlike most envelope modules, this slider determines the DURATION of the envelope, again calculated as a percentage of the phase divided by the number of hits.
+sustain: 
+the sustain level is always 100% (relative to phase->env--see below); unlike most envelope modules, this slider determines the DURATION of the envelope, again calculated as a percentage of the phase divided by the number of hits.
 
-decay: like attack.
+decay: 
+like attack.
 
 phase->env: 
 reduces the amplitude of the envelope by an amount proportionate to the phase value. Easier to see than to describe:
@@ -61,10 +66,14 @@ no spread, logarithmic spread, exponential spread
 
 spread applies a variable exponential or logarithmic function to the phase--the effect this has on the envelope is to cause it to linger longer on some envelopes, and move more quickly through others. Extreme values may cause some envelopes to disappear entirely. Again, this effect is easier to understand visually, and is accurately depicted on the graphics widget. And again, because this effect distorts the envelopes--although the effect can be quite organic--you can compensate by using the trigger output to trigger an external envelope generator.
 
-env: the main envelope output. 0-10v.
+env: 
+the main envelope output. 0-10v.
 
-trig: outputs triggers at the beginning of each attack phase. Useful if you want to use the unique timing effects of the module, but without the attendant envelope distortions.
+trig: 
+outputs triggers at the beginning of each attack phase. Useful if you want to use the unique timing effects of the module, but without the attendant envelope distortions.
 
-vca: outputs the value at the vca input, multiplied by the envelope.
+vca: 
+outputs the value of the vca input, multiplied by the envelope.
 
-phase: outputs the phase after applying skew and spread--the shape indicated by a gray triangle on the widget.
+phase: 
+outputs the phase after applying skew and spread--the shape indicated by a gray triangle on the widget.
