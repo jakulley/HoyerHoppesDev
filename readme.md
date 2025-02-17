@@ -30,21 +30,29 @@ sustain: the sustain level is always 100%; unlike most envelope modules, this sl
 decay: like attack.
 
 phase->env: 
-Reduces the amplitude of the envelopes proportionately to their position relative to the phase, after performing skew and morph functions. On the graphics widget, this is depicted as a hard clip, but in reality it is done by multiplication. Send the envelope to an oscilloscope to see. The effect can give the envelope repetitions an organic dynamic variation.
 ![{44710D33-F918-40B1-BFE2-662FE0B00BD6}](https://github.com/user-attachments/assets/c9a313b8-a2a6-43e2-9dfd-d96e0afd5e74)
+
 The top scope shows the envelope output with phase->env at 100%, the bottom at 0%. You can also compare the output of the first module to the graphics widget to see understand the difference.
+Reduces the amplitude of the envelopes proportionately to their position relative to the phase, after performing skew and morph functions. On the graphics widget, this is depicted as a hard clip, but in reality it is done by multiplication. Send the envelope to an oscilloscope to see. The effect can give the envelope repetitions an organic dynamic variation.
+
 
 
 hits: this controls how many times the envelope triggers per phase cycle. By default it ranges from 1-16, but there are several other options selectable from the context menu, which may be useful in different rhythmic contexts, particularly when CV is applied. It works by dividing the y-value of the phase into equal portions; as the phase rises through those portions, an envelope is output.
 
 skew: 
+
 ![{7AF39E20-07EC-438C-ABAE-345B2CD6233C}](https://github.com/user-attachments/assets/5706ebcb-0a1b-4ab1-83d4-42b1ad04b850)
+
 skew at 1., skew at .66, and skew at 0.
+
 Skew turns the phase into a triangle wave with a variable peak position along the x-axis--the effect this has on the envelope is to produce a mirror image envelope which is squeezed into the remainder of the phase window. It sounds more complicated than it is, just try moving the skew to see what I mean. An unusual consequence of the mirroring is that on the descending phase, the attack and decay values are swapped; attack becomes decay, and vice versa. To compensate for this behavior, which may not always be desirable (e.g. in percussive contexts), there is a trigger output available.
 
 spread: 
+
 ![{E2B3F275-A4BB-4D95-B663-07EC62D61438}](https://github.com/user-attachments/assets/c643cce0-836f-4d7d-8b53-5f2c36918a1a)
+
 no spread, logarithmic spread, exponential spread
+
 spread applies a variable exponential or logarithmic function to the phase--the effect this has on the envelope is to cause it to linger longer on some envelopes, and move more quickly through others. Extreme values may cause some envelopes to disappear entirely. Again, this effect is easier to understand visually, and is accurately depicted on the graphics widget. And again, because this effect distorts the envelopes--although the effect can be quite organic--you can compensate by using the trigger output to trigger an external envelope generator.
 
 env: the main envelope output. 0-10v.
