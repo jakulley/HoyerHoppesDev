@@ -30,6 +30,7 @@ sustain: the sustain level is always 100%; unlike most envelope modules, this sl
 decay: like attack.
 
 phase->env: 
+
 ![{44710D33-F918-40B1-BFE2-662FE0B00BD6}](https://github.com/user-attachments/assets/c9a313b8-a2a6-43e2-9dfd-d96e0afd5e74)
 
 The top scope shows the envelope output with phase->env at 100%, the bottom at 0%. You can also compare the output of the first module to the graphics widget to see understand the difference.
