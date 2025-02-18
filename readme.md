@@ -326,9 +326,13 @@ Mode:
 
 There are 5 modes for both floor and ceiling.
 
-to ceiling (and to floor):
+to ceiling (floor only):
 
-if a note is lower than the floor threshold, it gets sent to the ceiling value. If a note is higher than the ceiling threshold, it gets sent to the floor value. **to floor** is a particularly useful mode in many EDM contexts, where the pedal point or root note of the chord progression is constantly returned to by the bass ostinato
+if a note is lower than the floor threshold, it gets sent to the ceiling value.
+
+to root (ceiling only):
+
+sends the value to the root note belonging to the floor's octave. The root note is defined as the lowest note with priority 4 (white). A very useful mode for adding more root notes to a bass ostinato.
 
 up oct (and down oct):
 
