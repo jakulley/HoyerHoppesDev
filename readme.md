@@ -26,15 +26,17 @@ The reset in, out, and button work exactly like every other module, resetting th
 
 active ratio definition section:
 
-![image](https://github.com/user-attachments/assets/4d93bdf0-8859-4361-970b-ea0819054f8f)
+![image](https://github.com/user-attachments/assets/d47c433b-3b66-4cd5-bce5-35111ced31ab)
 
 The raison of the module. Each active ratio is added to a list of ratios from which the scanner and the various other outputs select. In this example, the 1:1, 16:5, 32:5, and 32:1 ratios are active. This means the scanner will scan through 4 regions, each containing one active ratio. If the scan value is <.25, it will return 1:1; if scan <.5, it will return 16:5; and so on. The low output will return the lowest ratio (1:1), the high output returns the highest, and the middle the middle. More on the outputs in a second. The inputs below each button are gates with a 1v threshold, and have no effect if the button is already on.
+
+The non-integer ratios are unique in that they have a tail-end phase that doesn't complete before the cycle resets; they have familiar and useful rhythmic qualities.
 
 Note that unlike the more common clock divider modules, each ratio here *increases* the rate of the clock. For that reason it often makes sense to have a very slow master clock.
 
 scan section:
 
-![image](https://github.com/user-attachments/assets/ea606936-6107-4b60-bae5-626eba53e4a8)
+![image](https://github.com/user-attachments/assets/5089fddd-cf85-4481-bd73-90588be471b0)
 
 scan: 
 
