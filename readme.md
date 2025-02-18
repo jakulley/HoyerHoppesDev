@@ -40,7 +40,7 @@ scan section:
 
 scan: 
 
-The unique feature of the module. Think of the scan knob's range as being divided into a number of regions equal to the number of active ratios (as it quite literally is in the code). As the knob (or the input 0-10v CV) passes into each new region, the scan output equals that new value. If a sawtooth lfo is fed in, then it will spend the same amount of time in each region, but of course you're not limited to sawtooth waves. stepped voltage, s&h outputs, triangle and sine waves can all give interesting results.
+Think of the scan knob's range as being divided into a number of regions equal to the number of active ratios (as it quite literally is in the code). As the knob (or the input 0-10v CV) passes into each new region, the scan output equals that new value. If a sawtooth lfo is fed in, then it will spend the same amount of time in each region, but of course you're not limited to sawtooth waves. Stepped random voltage, s&h outputs, triangle and sine waves, and even v/oct (given a big enough keyboard) can all yield interesting results.
 
 skew: 
 
