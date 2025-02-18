@@ -115,7 +115,7 @@ Again, this is virtually identical to the scanning clock multiplier, with the ex
 Note that some divisors (3, 5, and especially 7) have an odd "out of tune" sound to our western ears, despite being perfect divisions. This is because perfect division is the province of just intonation, whereas for centuries our music has been largely composed with equal temperament. I'm not an expert, but you can google those terms to learn more about it.
 Also worth noting: the subdivisions quickly get very low in pitch-- /8 is fully 4 octaves lower than the starting frequency!
 
-The frequency knob and v/oct input work as expected. The module accepts polyphonic inputs. However, the module was initially conceptualized as a monophonic oscillator, creating multiple frequencies from a single v/oct source. Thus, because each voice is processed 4 times, they come at a higher cpu price. On my computer, a Scanning Frequency-Division Oscillator uses roughly 1.5-2x more cpu than a VCV WT VCO. Not bad, all things considered, and much has been done to improve performance.
+The frequency knob and v/oct input work as expected. The module accepts a polyphonic input. However, the module was initially conceptualized as a monophonic oscillator whose virtue was the capacity to create multiple harmonically-related frequencies from a single v/oct source. Thus, because each voice is processed 4 times (once for each output), they come at a higher cpu price. On my computer, a Scanning Frequency-Division Oscillator uses roughly 1.5-2x more cpu than a VCV WT VCO. If you're making use of frequency divisions, that's a good trade-off, but if you just want a standard oscillator and cpu is at a premium, then there are more efficient options.
 
 wave-shaping section:
 
