@@ -129,11 +129,18 @@ The bottom wave is a VCV WT VCO at max fm depth; the top wave is a Scanning Freq
 FM is also polyphonic, but it will distribute a monophonic fm signal across all channels of a polyphonic v/oct signal.
 
 sync:
-when the window light is off, behaves as ordinary hard sync, useful for saw and square waves, but a bit buzzy for sine and triangle waves. With the window light on, it becomes windowed sync, which has a lovely sound when it pairs sine waves. I was inspired to implement this feature by [Jakob Ciupinski's video](https://www.youtube.com/watch?v=Lh-yalj7-zM&ab_channel=JakubCiupinski) on smooth sync. I highly recommend his videos to every VCVRack user.
+
+when the window light is off, behaves as ordinary hard sync, useful for saw and square waves, but a bit buzzy for sine and triangle waves. With the window light on, it becomes **windowed sync**, which has a lovely sound when it pairs sine waves. I was inspired to implement this feature by [Jakob Ciupinski's video](https://www.youtube.com/watch?v=Lh-yalj7-zM&ab_channel=JakubCiupinski) on smooth sync. I highly recommend his videos to every VCVRack user.
 
 ![image](https://github.com/user-attachments/assets/7fdbfe13-ad59-4410-b37c-0bdfb7872e39)
 
 Note the harsh edges in the synced wave in the first example, vs the smooth transitions in the second example.
+
+The window knob progressively inverts the value of the wave that's "in the window." It's usually a pretty subtle timbral effect, although it can be very pronounced with some waves.
+
+![image](https://github.com/user-attachments/assets/902d1dd2-0de3-41a9-8265-ef5699a33ebd)
+
+various window settings on the same synced wave.
 
 Sync strongly affects the perceived fundamental of the synced oscillator. As such, when using sync, the subdivisions will often sound more like timbral variations, rather than genuinely different notes.
 
