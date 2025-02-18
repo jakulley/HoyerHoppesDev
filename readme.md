@@ -11,6 +11,87 @@ Included modules:
     Melody Transformer
 
 
+Scanning Clock Multiplier v2
+
+![image](https://github.com/user-attachments/assets/4bea70ba-ca9f-4e53-acf1-e3d180a48c95)
+
+The Scanning Clock Multiplier is a clock generator or clock modulator that operates on the concept of a user-defined list of "active ratios." The buttons and their corresponding gate inputs determine whether a given ratio is active or not, and the scan parameter allows users to scan through that list via the knob and/or 0-10v CV. By selecting your active ratios thoughtfully, you can orchestrate whole rhythm sections with just one or two of these modules.
+
+clock rate and reset section:
+
+![image](https://github.com/user-attachments/assets/82680d2c-ac55-4f28-8543-73fabdf2c7af)
+
+With no rate input, the rate is defined by the knob, and ranges from 1-700 bpm, defaulting to 120. The rate input can accept either clock triggers (with the direct phase button off) or 0-10 phase input (with the direct phase button on). Direct phase is useful for daisy-chaining modules, and ensures the tightest sync; if clock pulses are sent instead, the module will require two pulses before it can calculate the rate, and any tempo changes will be delayed by a pulse before they take effect.
+The reset in, out, and button work exactly like every other module, resetting the phase to 0 while the gate is held.
+
+active ratio definition section:
+
+![image](https://github.com/user-attachments/assets/6d0204a0-dcbe-47ff-9450-7ad8a9a20a23)
+
+The raison of the module. Each active ratio is added to a list of ratios from which the scanner and the various other outputs select. In this example, the 1:1, 16:5, 32:5, and 32:1 ratios are active. This means the scanner will scan through 4 regions, each containing one active ratio. If the scan value is <.25, it will return 1:1; if scan <.5, it will return 16:5; and so on. The low output will return the lowest ratio (1:1), the high output returns the highest, and the middle the middle. More on the outputs in a second. The inputs below each button are gates with a 1v threshold, and have no effect if the button is already on.
+
+Note that unlike the more common clock divider modules, each ratio here *increases* the rate of the clock. For that reason it often makes sense to have a very slow master clock.
+
+scan section:
+
+![image](https://github.com/user-attachments/assets/ea606936-6107-4b60-bae5-626eba53e4a8)
+
+scan: 
+
+The unique feature of the module. Think of the scan knob's range as being divided into a number of regions equal to the number of active ratios (as it quite literally is in the code). As the knob (or the input 0-10v CV) passes into each new region, the scan output equals that new value. If a sawtooth lfo is fed in, then it will spend the same amount of time in each region, but of course you're not limited to sawtooth waves. stepped voltage, s&h outputs, triangle and sine waves can all give interesting results.
+
+skew: 
+
+applies an exponential function to the input phase, resulting in outputs that bunch up toward the beginning or end of the phase. for a 2:1 ratio, low amounts can sound like swing. At high ratios this can create interesting enveloping or burst effects.
+
+![image](https://github.com/user-attachments/assets/6fece706-b6b8-4c1a-8988-703592efac1b)
+
+skewed phase vs. normal phase.
+
+phase: 
+
+pushes the start and end of the phase farther "back" relative to the input phase.
+
+![image](https://github.com/user-attachments/assets/8f6a6321-460d-4abf-86d5-27b0e6a994b9)
+
+In the first oscilloscope, two phases with no phase applied. You can see they are identical. In the second, a phase shift of .5 is applied to the second signal.
+Useful in cases where syncopation is desired, as in the case of a bass groove sitting in the pocket of a kick drum, for example.
+Note that phase is applied based on the active ratio in the scanner, which can result in odd behavior from the ratios present at other outputs.
+
+
+output section:
+
+![image](https://github.com/user-attachments/assets/ba622242-e702-40ac-8cba-fb6206090f4c)
+
+The outputs on the left are triggers, the outputs on the right are phasors.
+
+rate:
+
+The first outputs are through-puts of the rate, with no modulation applied.
+
+scan:
+
+Can be thought of as the "main" output of the module, its output is determined by the list of active ratios and the value of the scan knob summed with the scan cv input.
+
+refl. scan:
+
+Returns the ratio at the mirror image of the knob's position. At scan = 0, it returns the value of scan = 1. At scan = .75, it returns the value of scan = .25. And so on.
+
+low:
+
+Returns the lowest active ratio.
+
+high:
+
+Returns the highest active ratio.
+
+middle:
+
+Returns the middlemost active ratio. If there are an even number of active ratio, it chooses the higher of the two middlemost values.
+
+
+
+
 
 Phase-Driven Multihit Envelope
 
