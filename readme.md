@@ -364,7 +364,7 @@ Like other quantizers with keyboard-style note selects, you click notes to add o
 
 Transpose:
 
-semitone transposition, like you get with many other quantizers. Accepts v/oct, and wraps back around past 1v, so it will work as expected with the entire range of your keyboard.
+semitone transposition, like you get with many other quantizers. Accepts v/oct, and wraps back around past 1v, so it will work as expected with the entire range of your keyboard. If you are modulating transpose or prioShift with non-v/oct sources (e.g. an lfo) it is recommended that you scale them to fit a -1 to 1v range.
 
 Prio-shift:
 
