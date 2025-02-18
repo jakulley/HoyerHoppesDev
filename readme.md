@@ -364,11 +364,11 @@ Like other quantizers with keyboard-style note selects, you click notes to add o
 
 Transpose:
 
-semitone transposition, like you get with many other quantizers. Accepts v/oct, and wraps back around past 1v, so it will work as expected with the entire range of your keyboard. If you are modulating transpose or prioShift with non-v/oct sources (e.g. an lfo) it is recommended that you scale them to fit a -1 to 1v range.
+semitone transposition, like you get with many other quantizers. Accepts v/oct, and wraps back around past 1v, so it will work as expected with the entire range of your keyboard. If you are modulating transpose or prioShift with non-v/oct sources (e.g. an lfo) it is recommended that you scale them to fit a -1 to 1v range, unless you want it to wrap around multiple times in a single lfo cycle.
 
 Prio-shift:
 
-This awkward name denotes shifting the "priority value" of each active note in the primary scale, without adding any notes that weren't already active. Like transpose, it accepts v/oct and wraps around, however it only accepts v/oct that falls within the active scale (a D# won't do anything if the scale is set to C Major, for example). Furthermore, the knob only transposes to valid values. In a C Major scale, setting the knob to +1 doesn't do anything, because D# isn't in the scale. +2 shifts you into the second mode, however.
+This awkward name denotes shifting the "priority value" of each active note in the primary scale, without adding any notes that weren't already active. Like transpose, it accepts v/oct and wraps around, however it only accepts v/oct that falls within the active scale (a D# won't do anything if the scale is set to C Major, for example). Furthermore, the knob only transposes to valid values. In a C Major scale, setting the knob to +1 doesn't do anything, because D# isn't in the scale. +2 shifts you into the second mode, however. As a final note, it will still respond to unquantized voltages (e.g. from VCV SEQ-3) *as long as they round to a valid scale note*.
 
 ![image](https://github.com/user-attachments/assets/c79f4daa-0642-4f57-ad2e-793e4c9be016)
 
