@@ -261,3 +261,180 @@ outputs the value of the vca input, multiplied by the envelope.
 phase: 
 
 outputs the phase after applying skew and spread--the shape indicated by a gray triangle on the widget.
+
+
+**Melody Transformer**
+
+![image](https://github.com/user-attachments/assets/d0839803-a97f-4751-a5a2-d0d31d057ac4)
+
+The Melody Transformer is an advanced polyphonic quantizer with numerous pre-quantization signal-processing utilities, including a 16-step polyphonic shift register. Its unique feature is the **Note Priority System**, which allows users to quickly define chords or subscales of the active scale.
+
+![image](https://github.com/user-attachments/assets/081ce381-5913-4d0c-9aee-f3cc1f8c8c4b)
+
+Process section:
+
+![image](https://github.com/user-attachments/assets/56f73721-5a0f-47af-9938-16899e65b65a)
+
+
+Input:
+
+The input is polyphonic; if you're using the module polyphonically, you will likely want to rescale your inputs individually before merging them and sending them to the input. With no input signal present, a single channel of **white noise is normalled to the input**, meaning the module can create its own sequences with just a clock input at s&h.
+
+s&h:
+
+a polyphonic trigger input for clocks or other trigger sources, the sample and hold will sample the value(s) at the input(s) once per trigger. Only active when the button is on.
+
+gain:
+
+an attenuverter parameter, allows you to limit the range of your input signal and/or invert it. Applies equally to all input channels.
+
+offset:
+
+additively shifts the range of the input after gain is applied, enabling higher- or lower-pitched sequences. Applies equally to all input channels.
+
+If you are using the module polyphonically to orchestrate voices across multiple frequency ranges, it will likely be the case that you want to leave the gain and offset knobs alone, and instead preprocess each input signal using for example VCV RESC or the Befaco Dual Atenuverter (sic).
+
+Loop section:
+
+![image](https://github.com/user-attachments/assets/12514332-2a60-4823-b494-6d986c408c15)
+
+On:
+
+when loop is off (gray button), it writes each input channel to a separate 16-step shift register at a rate set by the clock input (or s&h if no clock input is present). When loop is on (white button), it stops writing to the shift registers, and instead starts reading them to the outputs, again at a rate set by either clock or s&h.
+Gain and Offset are applied post shift register, so locked loops can still be rescaled.
+The contents of the shift registers are saved on shutdown, and assuming the loop button is on, will still be there when the patch is reloaded. There is currently no facility for saving preset loops.
+
+Clock:
+
+Accepts clock triggers just like s&h, but is normalled to s&h, so in most use cases it can be left empty.
+
+Length:
+
+Determines how many steps of the shift registers to read before resetting.
+A shorter loop length does not erase the content of the shift register, which is always 16 values. So you can play around with shorter loop lengths and then return to the full-length loop at any time.
+
+Overwrite:
+
+If the button is held (or the input is high) when loop is on and a clock trigger is fired, this will replace the contents of the shift register with the input value. Similar to the write function of a Turing Machine.
+
+Floor and Ceiling sections:
+
+![image](https://github.com/user-attachments/assets/d951414a-ab85-411a-be2d-6a0d66103ed1)
+
+Floor and Ceiling work in tandem with the gain and offset parameters to limit the range of values passed by the outputs. Unlike the simple rescaling functions, Floor and Ceiling work by detecting when a value is lower or higher than their respective thresholds,
+and recalculating that value based on their mode.
+
+Mode:
+
+There are 5 modes for both floor and ceiling.
+
+to ceiling (and to floor):
+
+if a note is lower than the floor threshold, it gets sent to the ceiling value. If a note is higher than the ceiling threshold, it gets sent to the floor value. **to floor** is a particularly useful mode in many EDM contexts, where the pedal point or root note of the chord progression is constantly returned to by the bass ostinato
+
+up oct (and down oct):
+
+if a value would exceed the relevant threshold, 1v (equivalent to an octave in v/oct) is added or subtracted from it until it no longer exceeds the threshold. In other words, the values will retain their note value, but stay within the range permitted by floor and ceiling.
+
+rectify:
+
+if a value would exceed the relevant threshold, it is instead raised (or reduced) by the amount by which it exceeded it.
+
+![image](https://github.com/user-attachments/assets/f31ab83f-9dc4-4389-b046-55d169c99355)
+
+Below, a 0-10v saw wave. Above, the effects of ceiling set to rectify and a level of 5v.
+
+clip:
+
+if a value would exceed the relevant threshold, it instead becomes equal to that threshold. Like to floor for ceiling, clip for floor can be useful for setting pedal points and increasing the frequency with which the input value returns to it.
+
+![image](https://github.com/user-attachments/assets/09ca4a28-6837-47ae-85fd-9ed1c66677f1)
+
+Below, a 0-10 saw wave. Above, the effects of ceiling set to clip anything past 5v.
+
+bypass: 
+
+do nothing if a value exceeds the threshold. This may seem like a useless mode--why not simply leave the levels at minimum and maximum, respectively? But, for example, bypass allows you to set a floor value which will be made use of by the ceiling's to floor function, while still allowing notes that are *less* than floor to pass by unchanged.
+
+Like gain and offset, **floor and ceiling are applied uniformly across channels**, and have fewer use cases in complex polyphonic orchestrations.
+
+Quantize section:
+
+![image](https://github.com/user-attachments/assets/94bb5137-1d98-4696-8920-d8398282feb7)
+
+Like other quantizers with keyboard-style note selects, you click notes to add or remove them from the active scale. Unlike other quantizers, you have access to **a primary scale, plus up to three subscales, each of which are sub-subscales of each other**. Combined with the priority-shift function, this enables easy chord changes without ever falling out of key.
+
+Transpose:
+
+semitone transposition, like you get with many other quantizers. Accepts v/oct, and wraps back around past 1v, so it will work as expected with the entire range of your keyboard.
+
+Prio-shift:
+
+This awkward name denotes shifting the "priority value" of each active note in the primary scale, without adding any notes that weren't already active.
+
+![image](https://github.com/user-attachments/assets/c79f4daa-0642-4f57-ad2e-793e4c9be016)
+
+The dots show the current priority values of the notes after applying transposition and/or priority shifting.
+
+This image clearly shows the difference between transposition and prio-shift. Both shift the root note to D, but transposition shifts all note priorities equally. In other words, we've gone from C Major to D Major (note that c# and f# are now active). Prio-shift, on the other hand, keeps all notes in the original scale, and we go from C Major to D Dorian, which is the second mode of the Major Scale.
+
+**The effects of prio-shift won't be heard on the prio1 output**, because prio1 outputs any active note without biasing toward any priority value. But the higher priority outputs will be affected.
+
+**By combining transpose and prio-shift, we can achieve any mode in any key without touching the note select interface.** For example, let's say I want f# minor.
+
+Starting from C Major:
+
+![image](https://github.com/user-attachments/assets/540e9f34-0c12-4e17-a349-9d913fa77375)
+
+We prio-shift up to the 6th Mode, which is Aeolian, or more commonly known as the minor key. Now we are in A Minor:
+
+![image](https://github.com/user-attachments/assets/ff0663da-490a-4d0d-9090-94b3a5fe6526)
+
+Now we simply transpose down to f#:
+
+![image](https://github.com/user-attachments/assets/7ddcd67a-4f27-458f-b5e0-5c3b921683b5)
+
+And we're done! Leaving transpose alone, we can now apply v/oct to prio-shift and achieve different chords while staying in f# Minor as the overarching key.
+
+The default settings give us the root note in the prio4 position, root+5 at prio3, root+3+5 (relative triad) at prio2, and the full scale at prio1. But there is no rule saying you have to stay in that configuration. For example:
+
+![image](https://github.com/user-attachments/assets/2a772b36-a015-43bc-b660-a75938e51a0c)
+
+This gives us the root at prio4, the relative triad at prio3, **the relative pentatonic at prio2**, and all notes at prio1. In fact, this may be a more useful default configuration, so I might change the default setting.
+
+Output section:
+
+![image](https://github.com/user-attachments/assets/dc215733-9168-4000-aa21-10b94fa83b61)
+
+We've already discussed the outputs at some length, but to summarize:
+
+Raw:
+
+Raw isn't actually raw, I confess. It is the gained, offset, looped, floored, and ceilinged output. It only skips the quantizer.
+
+Prio1:
+
+All notes, from dark grey to white. Black notes are excluded from all outputs.
+
+Prio2:
+
+middle grey, light grey, and white notes.
+
+prio3:
+
+light grey and white notes.
+
+prio4:
+
+only white notes.
+
+
+
+
+
+
+
+
+
+
+
