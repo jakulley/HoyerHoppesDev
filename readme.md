@@ -10,7 +10,9 @@ Included modules:
 
     Melody Transformer
 
-![image](https://github.com/user-attachments/assets/7c5e50fc-87ca-4f9a-a823-d10aa4d37968)
+![image](https://github.com/user-attachments/assets/e2d005b2-3ef8-4039-9f26-31dd9175304d)
+![image](https://github.com/user-attachments/assets/e89b6e0a-d78f-41d5-8ddf-23c7453772d2)
+
 
 
 **Scanning Clock Multiplier v2**
