@@ -368,7 +368,7 @@ semitone transposition, like you get with many other quantizers. Accepts v/oct, 
 
 Prio-shift:
 
-This awkward name denotes shifting the "priority value" of each active note in the primary scale, without adding any notes that weren't already active. Like transpose, it accepts v/oct and wraps around, however it only accepts v/oct that falls within the active scale (a D# won't do anything if the scale is set to C Major, for example).
+This awkward name denotes shifting the "priority value" of each active note in the primary scale, without adding any notes that weren't already active. Like transpose, it accepts v/oct and wraps around, however it only accepts v/oct that falls within the active scale (a D# won't do anything if the scale is set to C Major, for example). Furthermore, the knob only transposes to valid values. In a C Major scale, setting the knob to +1 doesn't do anything, because D# isn't in the scale. +2 shifts you into the second mode, however.
 
 ![image](https://github.com/user-attachments/assets/c79f4daa-0642-4f57-ad2e-793e4c9be016)
 
