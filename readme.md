@@ -269,8 +269,6 @@ outputs the phase after applying skew and spread--the shape indicated by a gray 
 
 The Melody Transformer is an advanced polyphonic quantizer with numerous pre-quantization signal-processing utilities, including a 16-step polyphonic shift register. Its unique feature is the **Note Priority System**, which allows users to quickly define chords or subscales of the active scale.
 
-![image](https://github.com/user-attachments/assets/081ce381-5913-4d0c-9aee-f3cc1f8c8c4b)
-
 Process section:
 
 ![image](https://github.com/user-attachments/assets/56f73721-5a0f-47af-9938-16899e65b65a)
