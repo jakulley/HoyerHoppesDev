@@ -10,8 +10,8 @@ Included modules:
 
     Melody Transformer
 
-![image](https://github.com/user-attachments/assets/e2d005b2-3ef8-4039-9f26-31dd9175304d)
-![image](https://github.com/user-attachments/assets/e89b6e0a-d78f-41d5-8ddf-23c7453772d2)
+![image](https://github.com/user-attachments/assets/381255ec-0672-4cfe-a7f6-9868a51115d1)
+![image](https://github.com/user-attachments/assets/2b8c8c2a-c92e-44e2-85b5-1ea9f0fd964d)
 
 
 
