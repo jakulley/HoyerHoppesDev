@@ -70,20 +70,20 @@ struct Melody_transformer : Module {
 		configSwitch(CEILING_MODE_PARAM, 0.f, 4.f, 4.f, "");
 		configParam(FLOOR_LEVEL_PARAM, -10.f, 10.f, -10.f, "");
 		configParam(CEILING_LEVEL_PARAM, -10.f, 10.f, 10.f, "");
-		configSwitch(TRANSPOSE_PARAM, -12.f, 12.f, 0.f, "transpose scale in semitones", {"-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+		configSwitch(TRANSPOSE_PARAM, -12.f, 12.f, 0.f, "", {"-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
 		configSwitch(C_SHARP_PARAM, 0.f, 4.f, 0.f, "");
 		configSwitch(D_SHARP_PARAM, 0.f, 4.f, 0.f, "");
 		configSwitch(F_SHARP_PARAM, 0.f, 4.f, 0.f, "");
 		configSwitch(G_SHARP_PARAM, 0.f, 4.f, 0.f, "");
 		configSwitch(A_SHARP_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(C_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(D_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(E_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(F_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(G_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(A_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(B_PARAM, 0.f, 4.f, 0.f, "");
-		configSwitch(PRIO_SHIFT_PARAM, -12.f, 12.f, 0.f, "shift priorities of active notes", {"-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
+		configSwitch(C_PARAM, 0.f, 4.f, 4.f, "");
+		configSwitch(D_PARAM, 0.f, 4.f, 2.f, "");
+		configSwitch(E_PARAM, 0.f, 4.f, 3.f, "");
+		configSwitch(F_PARAM, 0.f, 4.f, 1.f, "");
+		configSwitch(G_PARAM, 0.f, 4.f, 3.f, "");
+		configSwitch(A_PARAM, 0.f, 4.f, 2.f, "");
+		configSwitch(B_PARAM, 0.f, 4.f, 1.f, "");
+		configSwitch(PRIO_SHIFT_PARAM, -12.f, 12.f, 0.f, "shift scale while staying in key", {"-12", "-11", "-10", "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"});
 		configInput(INPUT_INPUT, "-10 to 10v, white noise normaled in");
 		configInput(GAIN_INPUT, "-10 to 10v, attenuverted by knob");
 		configInput(OFFSET_INPUT, "-10 to 10v, attenuverted by knob");
@@ -94,8 +94,8 @@ struct Melody_transformer : Module {
 		configInput(CEILING_MODE_INPUT, "0-5v, overrides knob");
 		configInput(FLOOR_LEVEL_INPUT, "-10 to 10v, overrides knob");
 		configInput(CEILING_LEVEL_INPUT, "-10 to 10v, overrides knob");
-		configInput(TRANSPOSE_INPUT, "-10 to 10v");
-		configInput(PRIO_SHIFT_INPUT, "-10 to 10v");
+		configInput(TRANSPOSE_INPUT, "accepts v/oct");
+		configInput(PRIO_SHIFT_INPUT, "accepts v/oct, ignoring notes outside of active scale");
 		configOutput(RAW_OUTPUT, "unquantized, but still processed and looped (if applicable)");
 		configOutput(PRIO_1_OUTPUT, "all active notes of the scale");
 		configOutput(PRIO_2_OUTPUT, "e.g. the root, 3rd, and 5th of the scale");
@@ -259,14 +259,41 @@ struct Melody_transformer : Module {
 		getLight(OVERWRITE_LIGHT).setBrightness(getParam(OVERWRITE_PARAM).getValue() == 1.f? 1.0 : 0.0);
 
 		//set note values and prio
-		transpose = int(getInput(TRANSPOSE_INPUT).isConnected()? getInput(TRANSPOSE_INPUT).getVoltage()/10.*12. : getParam(TRANSPOSE_PARAM).getValue());
-		prioShift = int(getInput(PRIO_SHIFT_INPUT).isConnected()? getInput(PRIO_SHIFT_INPUT).getVoltage()/10.*12. : getParam(PRIO_SHIFT_PARAM).getValue());
+		transpose = int(getInput(TRANSPOSE_INPUT).isConnected()? round(getInput(TRANSPOSE_INPUT).getVoltage()*12.) : getParam(TRANSPOSE_PARAM).getValue()) % 12;
+		//setting prioShift to respond to v/oct is more complicated than transpose, because it should only respond to values in the active scale
+		int inputNote = round(getInput(PRIO_SHIFT_INPUT).isConnected()? getInput(PRIO_SHIFT_INPUT).getVoltage() * 12. : getParam(PRIO_SHIFT_PARAM).getValue());
+		inputNote = inputNote % 12;
+		if (inputNote < 0) inputNote += 12;
+		// Find the index of the input note in the active scale
+		std::vector<int> activeScale;
+		for (int i = 0; i < 12; i++) {
+			if (notes[i].prio > 0) {
+				activeScale.push_back(i);
+			}
+		}
+		// Find the first (lowest index) active note in the scale to use as reference
+		int referenceIndex = -1;
+		if (!activeScale.empty()) {
+			referenceIndex = 0; // The first note in the sorted activeScale is the "root"
+		}
+		// Find index of inputNote in activeScale
+		int newIndex = -1;
+		for (size_t i = 0; i < activeScale.size(); i++) {
+			if (activeScale[i] == inputNote) {
+				newIndex = i;
+				break;
+			}
+		}
+		// Ensure prioShift is updated only if inputNote is in activeScale and there's a valid reference
+		if (newIndex != -1 && referenceIndex != -1) {
+			prioShift = newIndex - referenceIndex;
+		}
+
 		updateNotes(transpose, prioShift);
 
 		//set channels based on input
 		int channels = std::max(1, getInput(INPUT_INPUT).getChannels());
 
-		
 		for (int c = 0; c < channels; c++) {
 			input[c] = getInput(INPUT_INPUT).isConnected()? getInput(INPUT_INPUT).getPolyVoltage(c) : std::rand() / float(RAND_MAX) * 20. - 10.;
 			
@@ -329,6 +356,7 @@ struct Melody_transformer : Module {
 					case 4 :
 						break;
 				}
+
 			}
 			if (offsetRaw[c] > ceiling) {
 				switch (ceilingMode) {
@@ -525,27 +553,36 @@ struct NoteShiftIndicator : Widget {
 		switch (int(note->prio)) {
 			case 0:
 				nvgFillColor(args.vg, nvgRGBf(0., 0., 0.));
+				nvgStrokeColor(args.vg, nvgRGBf(1., 1., 1.));
 				break;
 			case 1:
 				nvgFillColor(args.vg, nvgRGBf(0.33, 0.33, 0.33));
+				nvgStrokeColor(args.vg, nvgRGBf(0.66, 0.66, 0.66));
+
 				break;
 			case 2:
 				nvgFillColor(args.vg, nvgRGBf(0.5, 0.5, 0.5));
 				break;
 			case 3:
 				nvgFillColor(args.vg, nvgRGBf(0.66, 0.66, 0.66));
+				nvgStrokeColor(args.vg, nvgRGBf(0.33, 0.33, 0.33));
 				break;
 			case 4:
 				nvgFillColor(args.vg, nvgRGBf(1., 1., 1.));
+				nvgStrokeColor(args.vg, nvgRGBf(0., 0., 0.));
 				break;
 			default:
 				nvgFillColor(args.vg, nvgRGBf(0., 0., 0.));
+				nvgStrokeColor(args.vg, nvgRGBf(1., 1., 1.));
 				break;
 		}
 
 		nvgBeginPath(args.vg);
 		nvgCircle(args.vg, 0, 0, 5.);
 		nvgFill(args.vg);
+		nvgStrokeWidth(args.vg, 0.3);
+		nvgStroke(args.vg);
+
 	}
 };
 
