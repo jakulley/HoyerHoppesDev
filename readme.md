@@ -11,7 +11,7 @@ Included modules:
     Melody Transformer
 
 
-Scanning Clock Multiplier v2
+**Scanning Clock Multiplier v2**
 
 ![image](https://github.com/user-attachments/assets/4bea70ba-ca9f-4e53-acf1-e3d180a48c95)
 
@@ -95,7 +95,7 @@ Returns the middlemost active ratio. If there are an even number of active ratio
 
 
 
-Phase-Driven Multihit Envelope
+**Phase-Driven Multihit Envelope**
 
 ![{D60FBC3D-B95D-4A34-9EB5-A035D62D94B7}](https://github.com/user-attachments/assets/c59d697c-cf23-40d4-ab76-3df02630fc9e)
 
