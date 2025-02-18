@@ -91,6 +91,72 @@ middle:
 
 Returns the middlemost active ratio. If there are an even number of active ratio, it chooses the higher of the two middlemost values.
 
+**Scanning Frequency-Division Oscillator**
+
+A fully-featured polyphonic fm oscillator implementing a scannable list of subdivisions for unique undertone-series effects.
+
+![image](https://github.com/user-attachments/assets/b99cf9bb-d0dc-4d31-9321-0f4558bad6d1)
+
+scan section:
+
+![image](https://github.com/user-attachments/assets/ae1c5640-6b65-4284-b4b9-7e6858e6e3a8)
+
+works identically to the scan section of the scanning clock multiplier (see above for a detailed explanation), with the exception that the skew and phase parameters are absent, and instead a trigger output is present. The trigger fires everytime the scan enters a new "region" and starts returning a new subdivision. This is useful because the scanner can be used for arpeggio-like effects, and the trig out enables you to easily envelope those arpeggiated notes.
+
+subdivision select section:
+
+![image](https://github.com/user-attachments/assets/4c673af1-50a4-44c2-ba97-45d864734249)
+
+Again, this is virtually identical to the scanning clock multiplier, with the exception that it has half as many selectable ratios. Furthermore, it's predicated on division rather than multiplication, and it uses only integer divisors.
+Note that some divisors (3, 5, and especially 7) have an odd "out of tune" sound to our western ears, despite being perfect divisions. This is because perfect division is the province of just intonation, whereas for centuries our music has been largely composed with equal temperament. I'm not an expert, but you can google those terms to learn more about it.
+Also worth noting: the subdivisions quickly get very low in pitch-- /8 is fully 4 octaves lower than the starting frequency!
+
+The frequency knob and v/oct input work as expected. The module accepts polyphonic inputs. However, the module was initially conceptualized as a monophonic oscillator, creating multiple frequencies from a single v/oct source. Thus, because each voice is processed 4 times, they come at a higher cpu price. On my computer, a Scanning Frequency-Division Oscillator uses roughly 1.5-2x more cpu than a VCV WT VCO. Not bad, all things considered, and much has been done to improve performance.
+
+wave-shaping section:
+
+![image](https://github.com/user-attachments/assets/c1d0f898-c7b2-41ec-bbe1-bf8ef050e595)
+
+The module implements a classic sine-square waveshaper, passing through triangle and saw as intermediate shapes.
+
+FM:
+
+true through-zero FM, meaning that it maintains a strong fundamental even at extreme values. And the values can get extreme:
+
+![image](https://github.com/user-attachments/assets/3f6d4bd1-3934-41c9-b0b9-a936af3c3aad)
+
+The bottom wave is a VCV WT VCO at max fm depth; the top wave is a Scanning Frequency-Division Oscillator at max depth.
+FM is also polyphonic, but it will distribute a monophonic fm signal across all channels of a polyphonic v/oct signal.
+
+sync:
+when the window light is off, behaves as ordinary hard sync, useful for saw and square waves, but a bit buzzy for sine and triangle waves. With the window light on, it becomes windowed sync, which has a lovely sound when it pairs sine waves. I was inspired to implement this feature by [Jakob Ciupinski's video](https://www.youtube.com/watch?v=Lh-yalj7-zM&ab_channel=JakubCiupinski) on smooth sync. I highly recommend his videos to every VCVRack user.
+
+![image](https://github.com/user-attachments/assets/7fdbfe13-ad59-4410-b37c-0bdfb7872e39)
+
+Note the harsh edges in the synced wave in the first example, vs the smooth transitions in the second example.
+
+Sync strongly affects the perceived fundamental of the synced oscillator. As such, when using sync, the subdivisions will often sound more like timbral variations, rather than genuinely different notes.
+
+output section:
+
+![image](https://github.com/user-attachments/assets/21955d44-4cfc-43b7-a34b-2e1d40804320)
+
+freq:
+
+The main frequency, unaffected by scan.
+
+scan:
+
+The main frequency divided by the active subdivision at scan.
+
+refl.:
+
+Like the scanning clock multiplier, this returns the subdivision opposite the current scan value.
+
+low:
+
+The lowest active subdivision. Useful for basses.
+
 
 
 
