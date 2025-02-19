@@ -406,7 +406,7 @@ struct Phase_driven_multihit_envelopeWidget : ModuleWidget {
 					module->configSwitch(module->HITS_PARAM, 1.f, 7.f, 1.f, "number of hits", {"2", "4", "6", "8", "10", "12", "16"});
 					module->hitPattern=2;
 				}));
-			menu->addChild(createMenuItem("", "odds",
+			menu->addChild(createMenuItem("", "multiples of 3",
 				[=]()	{
 					module->configSwitch(module->HITS_PARAM, 1.f, 5.f, 1.f, "number of hits", {"3", "6", "9", "12", "15"});
 					module->hitPattern=3;

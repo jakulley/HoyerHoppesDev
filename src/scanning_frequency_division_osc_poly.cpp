@@ -52,7 +52,7 @@ struct Scanning_frequency_division_osc_poly : Module {
 
 	Scanning_frequency_division_osc_poly() {
 		config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
-		configParam(FREQ_PARAM, -4.f, 6.f, 0.f, "");
+		configParam(FREQ_PARAM, -5.f, 5.f, 0.f, "");
 		configParam(SCAN_PARAM, 0.f, 1.f, 0.f, "");
 		configParam(WAVE_SHAPE_PARAM, 0.f, 1.f, 0.f, "");
 		configParam(FM_DEPTH_PARAM, -2.f, 2.f, 0.f, "");
